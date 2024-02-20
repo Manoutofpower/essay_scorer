@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'mainpage.dart';
 import 'resetpwdpage.dart';
+import 'initialpage.dart';
 
 class UserPage extends StatelessWidget {
   @override
@@ -38,6 +38,16 @@ class UserPage extends StatelessWidget {
                   child: Text('Reset Account'),
                 ),
               ),
+              SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _showLogOutDialog(context);
+                  },
+                  child: Text('Log Out'),
+                ),
+              ),
             ],
           ),
         ),
@@ -56,15 +66,16 @@ class UserPage extends StatelessWidget {
             TextButton(
               child: Text("Yes"),
               onPressed: () {
-                //Logic to Reset Account should be here
 
-                Navigator.of(context).pop(); // Close dialog
+                // Reset ACCOUNT HERE
+
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
               child: Text("No"),
               onPressed: () {
-                Navigator.of(context).pop(); // Close Dialog
+                Navigator.of(context).pop();
               },
             ),
           ],
@@ -72,8 +83,34 @@ class UserPage extends StatelessWidget {
       },
     );
   }
-}
 
-void main() {
-  runApp(MaterialApp(home: MainPage()));
+  void _showLogOutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Log Out"),
+          content: Text("Are you sure you want to log out?"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Yes"),
+              onPressed: () {
+                Navigator.of(context).popUntil((route) => route.isFirst); //exit
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => InitialPage())
+                );
+              },
+            ),
+            TextButton(
+              child: Text("No"),
+              onPressed: () {
+                    Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

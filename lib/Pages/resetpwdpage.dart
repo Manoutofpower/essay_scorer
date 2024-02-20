@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'userpage.dart'; //
 
 class ResetPwdPage extends StatelessWidget {
   @override
