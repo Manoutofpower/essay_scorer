@@ -1,9 +1,23 @@
 import 'package:dio/dio.dart';
+import 'package:essay_scorer/models/QuesDetail.dart';
+import 'package:essay_scorer/models/question.dart';
 
 class QuestionService {
   Dio _dio = Dio(BaseOptions(
       baseUrl: "https://trans.rticonsulting.com.au/"
   ));
+
+  Future<List<Question>> fetchQuestions() async {
+    try {
+      final response = await _dio.post('/question/listing');
+      final data = response.data['questions'] as List;
+      List<Question> questions = data.map((json) => Question.fromJson(json)).toList();
+      return questions;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
 
   Future<bool> login(String username, String password) async {
     try {
@@ -25,6 +39,24 @@ class QuestionService {
     } catch (e) {
       print("Login error: $e");
       return false;
+    }
+  }
+
+  Future<QuestionDetail> fetchQuestionDetail(String quesID) async {
+    try {
+      final response = await _dio.post(
+        '/question/practice',
+        data: {'quesID': quesID},
+      );
+      if (response.data['status'] == 'OK') {
+        final questionMap = response.data['question'][0];
+        return QuestionDetail.fromJson(questionMap);
+      } else {
+        throw Exception('Failed to fetch question detail');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to fetch question detail');
     }
   }
 
