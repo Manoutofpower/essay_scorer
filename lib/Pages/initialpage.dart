@@ -17,20 +17,8 @@ class _InitialPageState extends State<InitialPage> {
   @override
   void initState() {
     super.initState();
-    postHttp();
   }
 
-  void getHttp() async {
-    final dio = Dio();
-    _response1 = await dio.get('https://trans.rticonsulting.com.au/status');
-    setState(() {});
-  }
-
-  void postHttp() async {
-    final dio = Dio();
-    _response2 = await dio.post('https://trans.rticonsulting.com.au/status');
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
