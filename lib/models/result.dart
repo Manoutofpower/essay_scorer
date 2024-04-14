@@ -32,13 +32,13 @@ class AutoCorrectionResult {
 }
 
 class Result {
-  final double contentScore; // 从 int 改为 double
+  final double contentScore;
   final String contentExplain;
-  final double coherenceScore; // 从 int 改为 double
+  final double coherenceScore;
   final String coherenceExplain;
-  final double lexicalScore; // 从 int 改为 double
+  final double lexicalScore;
   final String lexicalExplain;
-  final double grammarScore; // 从 int 改为 double
+  final double grammarScore;
   final String grammarExplain;
   final List<AutoCorrectionResult> autoCorrectionResults;
 
@@ -55,25 +55,39 @@ class Result {
   });
 
   factory Result.fromJson(Map<String, dynamic> json) {
-    List<AutoCorrectionResult> autoCorrections = (json['autoCorrectionResult'] as List)
-        .map((e) => AutoCorrectionResult.fromJson(e))
-        .toList();
+    List<AutoCorrectionResult> autoCorrections = [];
+    if (json['autoCorrectionResults'] != null) {
+      autoCorrections = (json['autoCorrectionResults'] as List)
+          .map((e) => AutoCorrectionResult.fromJson(e as Map<String, dynamic>))
+          .toList();
+    }
 
-    // 修改计算方式以保留小数点
-    double initialGrammarScore = 9 - autoCorrections.length.toDouble();
-    double finalGrammarScore = (initialGrammarScore > 0) ? initialGrammarScore : 0;
-    finalGrammarScore = finalGrammarScore.clamp(0, 9).toDouble() ?? 0.1; // 确保分数在0到9之间，并保持为double类型
+    double parseScore(dynamic value) {
+      try {
+        if (value is int) {
+          return value.toDouble();
+        } else if (value is String) {
+          return double.parse(value);
+        } else {
+          return (value as double);
+        }
+      } catch (e) {
+        print('Failed to parse score: $e');
+        return 0.0;
+      }
+    }
 
     return Result(
-      contentScore: (json['content']['score'] as num).toDouble() ?? 0.1,
+      contentScore: parseScore(json['content']['score']),
       contentExplain: json['content']['explain'] ?? '',
-      coherenceScore: (json['coherence']['score'] as num).toDouble() ?? 0.1,
+      coherenceScore: parseScore(json['coherence']['score']),
       coherenceExplain: json['coherence']['explain'] ?? '',
-      lexicalScore: (json['lexical']['score'] as num).toDouble() ?? 0.1,
+      lexicalScore: parseScore(json['lexical']['score']),
       lexicalExplain: json['lexical']['explain'] ?? '',
-      grammarScore: finalGrammarScore,
+      grammarScore: parseScore(json['grammar']['score']),
       grammarExplain: json['grammar']['explain'] ?? '',
       autoCorrectionResults: autoCorrections,
     );
   }
+
 }
