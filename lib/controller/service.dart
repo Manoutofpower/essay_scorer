@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:essay_scorer/models/QuesDetail.dart';
 import 'package:essay_scorer/models/question.dart';
+import 'package:essay_scorer/models/result.dart';
 
 class QuestionService {
   Dio _dio = Dio(BaseOptions(
@@ -60,4 +61,16 @@ class QuestionService {
     }
   }
 
+  Future<Result> submitAnswer(String answer, String topic) async {
+    try {
+      final response = await _dio.post(
+        '/api/check',
+        data: {'answer': answer, 'topic': topic},
+      );
+      return Result.fromJson(response.data);
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to submit answer');
+    }
+  }
 }
