@@ -32,10 +32,11 @@ class ResultPage extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: _buildScoreCard(),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: _buildCorrectionCard(context),
-            ),
+            if (result.autoCorrectionResults.isNotEmpty)  // 添加检查条件
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: _buildCorrectionCard(context),
+              ),
           ],
         ),
       ),
@@ -90,11 +91,6 @@ class ResultPage extends StatelessWidget {
     );
   }
 
-  Widget buildScoreComparisonProgressBar(Result result) {
-    double totalScore = (result.contentScore + result.coherenceScore + result.lexicalScore + result.grammarScore) / 4;
-    return LinearProgressIndicator(value: totalScore / 9.0);
-  }
-
   List<TextSpan> _highlightErrors(BuildContext context) {
     List<TextSpan> spans = [];
     String remainingText = userText;
@@ -127,6 +123,11 @@ class ResultPage extends StatelessWidget {
     }
 
     return spans;
+  }
+
+  Widget buildScoreComparisonProgressBar(Result result) {
+    double totalScore = (result.contentScore + result.coherenceScore + result.lexicalScore + result.grammarScore) / 4;
+    return LinearProgressIndicator(value: totalScore / 9.0);
   }
 
   Widget _buildCustomScoreTable() {
