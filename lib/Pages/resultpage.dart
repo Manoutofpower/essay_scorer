@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-
+import 'suggestionpage.dart';
 import '../models/result.dart';
 import 'taskspage.dart';
 
@@ -9,7 +9,8 @@ class ResultPage extends StatelessWidget {
   final String userText;
   final ScrollController scrollController = ScrollController();
 
-  ResultPage({Key? key, required this.result, required this.userText}) : super(key: key);
+  ResultPage({Key? key, required this.result, required this.userText})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,25 +19,33 @@ class ResultPage extends StatelessWidget {
         title: Text('Result'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => TasksPage())),
+          onPressed: () => Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => TasksPage())),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.lightbulb_outline),
+            onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => SuggestionPage(result: result))),
+            tooltip: 'Get Suggestions',
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.0),
               child: buildScoreComparisonProgressBar(result),
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.0),
               child: _buildScoreCard(),
             ),
-            if (result.autoCorrectionResults.isNotEmpty)  // 添加检查条件
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: _buildCorrectionCard(context),
-              ),
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: _buildCorrectionCard(context),
+            ),
           ],
         ),
       ),
@@ -46,7 +55,7 @@ class ResultPage extends StatelessWidget {
   Widget _buildScoreCard() {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -61,13 +70,13 @@ class ResultPage extends StatelessWidget {
   Widget _buildCorrectionCard(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Auto Correction Results'),
             Padding(
-              padding: const EdgeInsets.only(top: 0.0),
+              padding: EdgeInsets.only(top: 0.0),
               child: Container(
                 constraints: BoxConstraints(maxHeight: 300),
                 child: Scrollbar(
@@ -89,6 +98,11 @@ class ResultPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget buildScoreComparisonProgressBar(Result result) {
+    double totalScore = (result.contentScore + result.coherenceScore + result.lexicalScore + result.grammarScore) / 4;
+    return LinearProgressIndicator(value: totalScore / 9.0);
   }
 
   List<TextSpan> _highlightErrors(BuildContext context) {
@@ -125,11 +139,6 @@ class ResultPage extends StatelessWidget {
     return spans;
   }
 
-  Widget buildScoreComparisonProgressBar(Result result) {
-    double totalScore = (result.contentScore + result.coherenceScore + result.lexicalScore + result.grammarScore) / 4;
-    return LinearProgressIndicator(value: totalScore / 9.0);
-  }
-
   Widget _buildCustomScoreTable() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,7 +153,7 @@ class ResultPage extends StatelessWidget {
 
   Widget _buildAspectScoreCard(String aspect, double score, String explanation) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
+      padding: EdgeInsets.only(bottom: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
