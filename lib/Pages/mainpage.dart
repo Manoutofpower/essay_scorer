@@ -1,6 +1,8 @@
+import 'package:essay_scorer/global.dart';
 import 'package:flutter/material.dart';
 import 'userpage.dart';
 import 'taskspage.dart';
+import 'favouritepage.dart';
 
 class MainPage extends StatelessWidget {
   @override
@@ -29,7 +31,7 @@ class MainPage extends StatelessWidget {
           _buildCard('Have Passed', '** Tasks', Icons.hotel_outlined, context),
           _buildCard('Kept Learning', '1 Days', Icons.directions_walk_outlined, context),
           _buildCard('Tasks', '', Icons.assignment, context, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => TasksPage()))),
-          _buildCard('Saved Questions', '0 questions', Icons.bookmark, context),
+          _buildCard('Saved Questions', '0 questions', Icons.bookmark, context,  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FavoritesPage()))),
           _buildCard('Daily Improvement', '', Icons.lightbulb_outline, context),
         ],
       ),
