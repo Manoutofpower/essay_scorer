@@ -1,7 +1,8 @@
-import 'package:essay_scorer/Pages/practicepage.dart';
 import 'package:flutter/material.dart';
 import 'package:essay_scorer/models/question.dart';
 import 'package:essay_scorer/controller/service.dart';
+import '../global.dart';
+import 'practicepage.dart';
 import 'mainpage.dart';
 
 class TasksPage extends StatefulWidget {
@@ -23,9 +24,23 @@ class _TasksPageState extends State<TasksPage> {
   Future<void> fetchQuestions() async {
     try {
       questions = await _questionService.fetchQuestions();
+      for (var question in questions) {
+        question.isFavorited = favoriteQuestions.any((q) => q.quesID == question.quesID);
+      }
     } finally {
       setState(() => isLoading = false);
     }
+  }
+
+  void _toggleFavorite(Question question) {
+    setState(() {
+      question.toggleFavorite();
+      if (question.isFavorited) {
+        favoriteQuestions.add(question);
+      } else {
+        favoriteQuestions.removeWhere((q) => q.quesID == question.quesID);
+      }
+    });
   }
 
   @override
@@ -52,13 +67,13 @@ class _TasksPageState extends State<TasksPage> {
           itemCount: questions.length,
           itemBuilder: (context, index) {
             final question = questions[index];
-            return Card(
-              margin: EdgeInsets.symmetric(vertical: 8),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              child: ListTile(
-                title: Text(question.quesTitle),
-                onTap: () => fetchAndNavigate(question.quesID),
+            return ListTile(
+              title: Text(question.quesTitle),
+              trailing: IconButton(
+                icon: Icon(question.isFavorited ? Icons.favorite : Icons.favorite_border, color: Colors.redAccent),
+                onPressed: () => _toggleFavorite(question),
               ),
+              onTap: () => fetchAndNavigate(question.quesID),
             );
           },
         ),
