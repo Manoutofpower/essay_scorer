@@ -28,12 +28,10 @@ class MainPage extends StatelessWidget {
           ),
           IconButton(
             icon: Icon(Icons.lightbulb_outline, color: Colors.white),
-            onPressed: latestResult != null
-                ? () {
+            onPressed: latestResult != null ? () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => SuggestionPage(result: latestResult!)),
+                MaterialPageRoute(builder: (context) => SuggestionPage(result: latestResult!)),
               );
             }
                 : null,

@@ -47,18 +47,19 @@ class _TasksPageState extends State<TasksPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Write Essay'),
+        title: Text('Write Essay', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blueGrey,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () {
+          onPressed: (){
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => MainPage()),
                   (Route<dynamic> route) => false,
             );
           },
-        ),
-      ),
+        ),// For a dark theme, adjust AppBar color to fit
+      ), // Set the background to dark
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(
@@ -67,13 +68,19 @@ class _TasksPageState extends State<TasksPage> {
           itemCount: questions.length,
           itemBuilder: (context, index) {
             final question = questions[index];
-            return ListTile(
-              title: Text(question.quesTitle),
-              trailing: IconButton(
-                icon: Icon(question.isFavorited ? Icons.favorite : Icons.favorite_border, color: Colors.redAccent),
-                onPressed: () => _toggleFavorite(question),
+            return Card(
+              color: Colors.blueGrey[900], // Dark card color
+              elevation: 2,
+              margin: EdgeInsets.symmetric(vertical: 8),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              child: ListTile(
+                title: Text(question.quesTitle, style: TextStyle(color: Colors.white70)), // Text color for dark theme
+                trailing: IconButton(
+                  icon: Icon(question.isFavorited ? Icons.favorite : Icons.favorite_border, color: Colors.redAccent),
+                  onPressed: () => _toggleFavorite(question),
+                ),
+                onTap: () => fetchAndNavigate(question.quesID),
               ),
-              onTap: () => fetchAndNavigate(question.quesID),
             );
           },
         ),
@@ -89,7 +96,7 @@ class _TasksPageState extends State<TasksPage> {
         MaterialPageRoute(builder: (context) => PracticePage(questionDetail: questionDetail)),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error loading question details.")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error loading question details.", style: TextStyle(color: Colors.white))));
     }
   }
 }
