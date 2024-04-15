@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'userpage.dart';
 import 'taskspage.dart';
 import 'favouritepage.dart';
+import 'quizpage.dart';
 
 class MainPage extends StatelessWidget {
   @override
@@ -32,7 +33,7 @@ class MainPage extends StatelessWidget {
           _buildCard('Kept Learning', '$keptLearningDays Days', Icons.directions_walk_outlined, context),
           _buildCard('Tasks', '', Icons.assignment, context, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => TasksPage()))),
           _buildCard('Saved Questions', '${favoriteQuestions.length} questions', Icons.bookmark, context,  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FavoritesPage()))),
-          _buildCard('Daily Improvement', '', Icons.lightbulb_outline, context),
+          _buildCard('Daily Improvement', '', Icons.lightbulb_outline, context, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => QuizPage()))),
         ],
       ),
     );
