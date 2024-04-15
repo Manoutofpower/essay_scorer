@@ -5,7 +5,6 @@ import '../models/result.dart';
 import 'taskspage.dart';
 
 class ResultPage extends StatelessWidget {
-
   final Result result;
   final String userText;
   final ScrollController scrollController = ScrollController();
