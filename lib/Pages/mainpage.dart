@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'userpage.dart';
 import 'taskspage.dart';
 
 class MainPage extends StatelessWidget {
@@ -8,17 +9,45 @@ class MainPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Main Page'),
         automaticallyImplyLeading: false,
+        actions: <Widget>[
+          IconButton(
+            icon: CircleAvatar(
+              backgroundImage: AssetImage('assets/fanta.jpg'),
+            ),
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => UserPage())),
+          ),
+          IconButton(
+            icon: Icon(Icons.lightbulb_outline),
+            onPressed: () {},
+            tooltip: 'Get Suggestions',
+          ),
+        ],
       ),
-      body: SafeArea(
+      body: GridView.count(
+        crossAxisCount: 2,
+        children: <Widget>[
+          _buildCard('Have Passed', '** Tasks', Icons.hotel_outlined, context),
+          _buildCard('Kept Learning', '1 Days', Icons.directions_walk_outlined, context),
+          _buildCard('Tasks', '', Icons.assignment, context, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => TasksPage()))),
+          _buildCard('Saved Questions', '0 questions', Icons.bookmark, context),
+          _buildCard('Daily Improvement', '', Icons.lightbulb_outline, context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCard(String title, String data, IconData icon, BuildContext context, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
         child: Center(
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TasksPage()),
-              );
-            },
-            child: Text('Go to Tasks Page'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 48),
+              Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(data),
+            ],
           ),
         ),
       ),
